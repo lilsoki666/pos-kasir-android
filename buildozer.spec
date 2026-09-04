@@ -26,7 +26,7 @@ android.permissions = BLUETOOTH,BLUETOOTH_ADMIN,BLUETOOTH_SCAN,BLUETOOTH_CONNECT
 
 # Target modern Android
 android.api = 35
-android.minapi = 23
+android.minapi = 24
 android.ndk = 27c
 android.accept_sdk_license = True
 
