@@ -41,6 +41,10 @@ android.archs = arm64-v8a,armeabi-v7a
 android.allow_backup = True
 
 [buildozer]
+# ... existing config ...
+
+# Ensure compatible Python version
+python_version = 3.11
 
 log_level = 2
 warn_on_root = 1
