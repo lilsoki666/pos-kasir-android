@@ -24,11 +24,17 @@ icon.filename = %(source.dir)s/assets/icon.png
 # Android permissions
 android.permissions = BLUETOOTH,BLUETOOTH_ADMIN,BLUETOOTH_SCAN,BLUETOOTH_CONNECT,READ_MEDIA_IMAGES,READ_EXTERNAL_STORAGE
 
-# Target modern Android
+# Add this line to specify pip version compatibility
+p4a.pip_install_options = --no-build-isolation
+
+# Or alternatively, ensure requirements are properly pinned
+requirements = python3,kivy,pyjnius
+
+# Add this to clear the build cache and force a fresh environment
+android.ndk_version = 27c
 android.api = 35
 android.minapi = 24
-android.ndk = 27c
-android.accept_sdk_license = True
+android.gradle_version = 8.1.1
 
 # Untuk beberapa printer Bluetooth Classic
 android.add_src = android_src
