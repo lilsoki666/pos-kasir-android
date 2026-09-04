@@ -114,6 +114,22 @@ jobs:
       # 7. CHECK ENVIRONMENT
       # ==========================================
 
+      - name: Install Android SDK Build Tools
+        run: |
+          mkdir -p $ANDROID_HOME/cmdline-tools
+          
+          # Download Android SDK Command Line Tools
+          cd $ANDROID_HOME/cmdline-tools
+          wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+          unzip -q commandlinetools-linux-11076708_latest.zip
+          mv cmdline-tools tools
+          
+          # Install build-tools and other required components
+          yes | $ANDROID_HOME/cmdline-tools/tools/bin/sdkmanager \
+            "build-tools;35.0.0" \
+            "platforms;android-35" \
+            "platform-tools"
+
       - name: Check Build Environment
         run: |
 
