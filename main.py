@@ -520,7 +520,7 @@ class POSScreen(Screen):
         for idx,item in enumerate(self.cart_data):
             row=BoxLayout(size_hint_y=None,height=dp(55),spacing=dp(4))
             lbl=Label(text=f'{item["name"]}\n{item["qty"]:g} × {money(item["price"])}',
-                      color=.08,.09,.11,1, halign="left")
+                      color=(.08,.09,.11,1), halign="left")
             lbl.bind(size=lambda inst,val:setattr(inst,"text_size",val))
             row.add_widget(lbl)
             minus=Button(text="−",size_hint_x=.22)
