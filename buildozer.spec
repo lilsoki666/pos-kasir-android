@@ -42,13 +42,9 @@ fullscreen = 0
 # ============================================================
 
 android.api = 35
-
 android.minapi = 24
-
 android.ndk_version = 27c
-
-android.archs = arm64-v8a, armeabi-v7a
-
+android.archs = arm64-v8a
 
 # ============================================================
 # ANDROID APP SETTINGS
