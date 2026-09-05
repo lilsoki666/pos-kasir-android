@@ -112,44 +112,44 @@ jobs:
       - name: Verify AIDL
         run: |
 
-          echo "======================================"
-          echo "ANDROID SDK"
-          echo "======================================"
+         echo "======================================"
+         echo "SEARCHING FOR AIDL"
+         echo "======================================"
 
-          echo "$ANDROID_HOME"
-
-          echo "======================================"
-          echo "BUILD TOOLS"
-          echo "======================================"
-
-          ls -lah "$ANDROID_HOME/build-tools"
-
-          echo "======================================"
-          echo "SEARCHING AIDL"
-          echo "======================================"
-
-          AIDL=$(find "$ANDROID_HOME/build-tools" \
-            -type f \
-            -name aidl \
-            | sort \
-            | tail -n 1)
+         AIDL=$(find "$ANDROID_HOME/build-tools" \
+           -type f \
+           -name aidl \
+           | sort \
+           | tail -n 1)
 
           if [ -z "$AIDL" ]; then
-
             echo "ERROR: AIDL NOT FOUND"
-
             exit 1
-
           fi
 
-          echo "AIDL FOUND:"
+          echo "======================================"
+          echo "AIDL FOUND"
+          echo "======================================"
+
           echo "$AIDL"
 
           echo "======================================"
-          echo "AIDL VERSION"
+          echo "AIDL PERMISSION"
           echo "======================================"
 
-          "$AIDL" --version
+          ls -lh "$AIDL"
+
+          echo "======================================"
+          echo "AIDL TEST"
+          echo "======================================"
+
+          "$AIDL" --help > /dev/null
+
+          echo "AIDL executable successfully."
+
+          echo "======================================"
+          echo "AIDL CHECK PASSED"
+          echo "======================================"
 
 
       # ==========================================
