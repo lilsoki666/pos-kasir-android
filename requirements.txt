@@ -1,5 +1,3 @@
 kivy
 pyjnius
-# Use source builds for packages with wheel issues
---no-binary charset-normalizer
 charset-normalizer
