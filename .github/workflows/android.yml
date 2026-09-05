@@ -13,24 +13,19 @@ jobs:
 
     runs-on: ubuntu-22.04
 
-    env:
-      JAVA_HOME: /usr/lib/jvm/temurin-17-jdk-amd64
-      ANDROID_HOME: /usr/local/lib/android/sdk
-      ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
-
     steps:
 
-      # ==========================================
-      # 1. CHECKOUT
-      # ==========================================
+      # =========================================
+      # CHECKOUT
+      # =========================================
 
       - name: Checkout Repository
         uses: actions/checkout@v4
 
 
-      # ==========================================
-      # 2. JAVA 17
-      # ==========================================
+      # =========================================
+      # JAVA
+      # =========================================
 
       - name: Setup Java 17
         uses: actions/setup-java@v4
@@ -39,20 +34,20 @@ jobs:
           java-version: "17"
 
 
-      # ==========================================
-      # 3. PYTHON
-      # ==========================================
+      # =========================================
+      # PYTHON
+      # =========================================
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          cache: "pip"
+          cache: pip
 
 
-      # ==========================================
-      # 4. SYSTEM DEPENDENCIES
-      # ==========================================
+      # =========================================
+      # SYSTEM DEPENDENCIES
+      # =========================================
 
       - name: Install System Dependencies
         run: |
@@ -63,6 +58,8 @@ jobs:
             git \
             zip \
             unzip \
+            wget \
+            curl \
             autoconf \
             automake \
             libtool \
@@ -76,92 +73,98 @@ jobs:
             libssl-dev
 
 
-      # ==========================================
-      # 5. PYTHON DEPENDENCIES
-      # ==========================================
+      # =========================================
+      # BUILDOZER
+      # =========================================
 
-      - name: Install Python Dependencies
+      - name: Install Buildozer
         run: |
 
-          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install --upgrade pip
 
           pip install \
-            buildozer \
-            cython
+            "buildozer>=1.6.0" \
+            "cython<3"
 
 
-      # ==========================================
-      # 6. CACHE BUILDOZER
-      # ==========================================
+      # =========================================
+      # ANDROID SDK
+      # =========================================
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+
+      # =========================================
+      # ACCEPT ANDROID LICENSES
+      # =========================================
+
+      - name: Accept Android SDK Licenses
+        run: |
+
+          yes | sdkmanager --licenses || true
+
+
+      # =========================================
+      # INSTALL REQUIRED SDK
+      # =========================================
+
+      - name: Install Android SDK Packages
+        run: |
+
+          sdkmanager \
+            "platform-tools" \
+            "platforms;android-35" \
+            "build-tools;35.0.0"
+
+
+      # =========================================
+      # VERIFY SDK
+      # =========================================
+
+      - name: Verify Android SDK
+        run: |
+
+          echo "ANDROID_HOME:"
+          echo "$ANDROID_HOME"
+
+          echo ""
+          echo "SDK PACKAGES:"
+          sdkmanager --list_installed
+
+          echo ""
+          echo "AIDL:"
+          find "$ANDROID_HOME" \
+            -type f \
+            -name aidl \
+            -print
+
+          echo ""
+          echo "BUILD TOOLS:"
+          ls -lah "$ANDROID_HOME/build-tools/"
+
+
+      # =========================================
+      # BUILDOZER CACHE
+      # =========================================
 
       - name: Cache Buildozer
         uses: actions/cache@v4
-
         with:
 
           path: |
             ~/.buildozer
             .buildozer
 
-          key: |
-            buildozer-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
+          key: universalpos-buildozer-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
 
           restore-keys: |
-            buildozer-${{ runner.os }}-
+            universalpos-buildozer-${{ runner.os }}-
 
 
-      # ==========================================
-      # 7. CHECK ENVIRONMENT
-      # ==========================================
-
-      - name: Install Android SDK Build Tools
-        run: |
-          mkdir -p $ANDROID_HOME/cmdline-tools
-          
-          # Download Android SDK Command Line Tools
-          cd $ANDROID_HOME/cmdline-tools
-          wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
-          unzip -q commandlinetools-linux-11076708_latest.zip
-          mv cmdline-tools tools
-          
-          # Install build-tools and other required components
-          yes | $ANDROID_HOME/cmdline-tools/tools/bin/sdkmanager \
-            "build-tools;35.0.0" \
-            "platforms;android-35" \
-            "platform-tools"
-
-      - name: Check Build Environment
-        run: |
-
-          echo "================================="
-          echo "JAVA"
-          echo "================================="
-
-          java -version
-
-          echo "================================="
-          echo "PYTHON"
-          echo "================================="
-
-          python --version
-
-          echo "================================="
-          echo "BUILDOZER"
-          echo "================================="
-
-          buildozer --version
-
-          echo "================================="
-          echo "ANDROID"
-          echo "================================="
-
-          echo "ANDROID_HOME=$ANDROID_HOME"
-          echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT"
-
-
-      # ==========================================
-      # 8. CLEAN OLD BUILD
-      # ==========================================
+      # =========================================
+      # CLEAN
+      # =========================================
 
       - name: Clean Build
         run: |
@@ -169,65 +172,38 @@ jobs:
           buildozer android clean || true
 
 
-      # ==========================================
-      # 9. BUILD APK
-      # ==========================================
+      # =========================================
+      # BUILD
+      # =========================================
 
-      - name: Build Android APK
+      - name: Build APK
         run: |
 
-          set -o pipefail
-
-          for attempt in 1 2 3; do
-
-            echo "======================================"
-            echo "BUILD ATTEMPT $attempt / 3"
-            echo "======================================"
-
-            if buildozer -v android debug 2>&1 | tee build.log; then
-
-              echo "BUILD SUCCESS"
-
-              exit 0
-
-            fi
-
-            echo "BUILD FAILED"
-
-            if [ "$attempt" -lt 3 ]; then
-
-              echo "Waiting before retry..."
-
-              sleep $((attempt * 20))
-
-            fi
-
-          done
-
-          echo "======================================"
-          echo "ALL BUILD ATTEMPTS FAILED"
-          echo "======================================"
-
-          exit 1
+          buildozer -v android debug
 
 
-      # ==========================================
-      # 10. CHECK APK
-      # ==========================================
+      # =========================================
+      # VERIFY APK
+      # =========================================
 
       - name: Verify APK
         run: |
 
-          echo "APK RESULT"
+          echo "======================================"
+          echo "APK FILE"
+          echo "======================================"
+
+          find bin \
+            -type f \
+            -name "*.apk" \
+            -print
 
           ls -lah bin/
 
-          find bin -name "*.apk" -type f
 
-
-      # ==========================================
-      # 11. UPLOAD APK
-      # ==========================================
+      # =========================================
+      # UPLOAD APK
+      # =========================================
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
@@ -236,24 +212,6 @@ jobs:
 
           name: UniversalPOS-Android
 
-          path: |
-            bin/*.apk
+          path: bin/*.apk
 
           if-no-files-found: error
-
-
-      # ==========================================
-      # 12. UPLOAD BUILD LOG
-      # ==========================================
-
-      - name: Upload Build Log
-        if: always()
-
-        uses: actions/upload-artifact@v4
-
-        with:
-
-          name: UniversalPOS-Build-Log
-
-          path: |
-            build.log
