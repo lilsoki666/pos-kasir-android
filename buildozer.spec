@@ -1,54 +1,169 @@
 [app]
 
-# Nama aplikasi
+# ============================================================
+# INFORMASI APLIKASI
+# ============================================================
+
 title = UniversalPOS
 
-# Package Android harus unik
 package.name = universalpos
+
 package.domain = org.universalpos
 
 source.dir = .
-source.include_exts = py,png,jpg,jpeg,kv,atlas,json,txt,svg,ttf
-source.exclude_dirs = .git,.github,.buildozer,bin,__pycache__,venv,.venv
+
+source.include_exts = py,png,jpg,jpeg,kv,json,txt,db,atlas
 
 version = 1.0.0
 
-orientation = portrait
-fullscreen = 0
+version.regex = __version__ = ['"]([^'"]*)['"]
 
-# Ikon aplikasi
-icon.filename = %(source.dir)s/assets/icon.png
+version.filename = %(source.dir)s/main.py
 
-# Android permissions
-android.permissions = BLUETOOTH,BLUETOOTH_ADMIN,BLUETOOTH_SCAN,BLUETOOTH_CONNECT,READ_MEDIA_IMAGES,READ_EXTERNAL_STORAGE
 
-# Add this line to specify pip version compatibility
-p4a.pip_install_options = --no-build-isolation
+# ============================================================
+# REQUIREMENTS
+# ============================================================
 
-# Or alternatively, ensure requirements are properly pinned
 requirements = python3,kivy,pyjnius
 
-# Add this to clear the build cache and force a fresh environment
-android.ndk_version = 27c
+
+# ============================================================
+# ORIENTASI
+# ============================================================
+
+orientation = portrait
+
+fullscreen = 0
+
+
+# ============================================================
+# ANDROID
+# ============================================================
+
 android.api = 35
+
 android.minapi = 24
-android.gradle_version = 8.1.1
 
-# Untuk beberapa printer Bluetooth Classic
-android.add_src = android_src
+android.ndk_version = 27c
 
-# Android 12+ menggunakan permission runtime untuk Bluetooth.
-# Aplikasi juga melakukan request permission saat startup bila tersedia.
+android.archs = arm64-v8a, armeabi-v7a
 
-# Build optimization
-android.archs = arm64-v8a,armeabi-v7a
+
+# ============================================================
+# ANDROID APP SETTINGS
+# ============================================================
+
+android.accept_sdk_license = True
+
+android.enable_androidx = True
+
+android.enable_jetifier = True
+
+
+# ============================================================
+# PERMISSION
+# ============================================================
+
+android.permissions = \
+    INTERNET, \
+    BLUETOOTH, \
+    BLUETOOTH_ADMIN, \
+    BLUETOOTH_CONNECT, \
+    BLUETOOTH_SCAN, \
+    READ_EXTERNAL_STORAGE, \
+    WRITE_EXTERNAL_STORAGE
+
+
+# ============================================================
+# ICON
+# ============================================================
+
+icon.filename = %(source.dir)s/assets/icon.png
+
+
+# ============================================================
+# PRESPLASH
+# ============================================================
+
+presplash.filename = %(source.dir)s/assets/presplash.png
+
+
+# ============================================================
+# SCREEN
+# ============================================================
+
+# Tidak menggunakan fullscreen
+# fullscreen = 0
+
+
+# ============================================================
+# ANDROID BACKUP
+# ============================================================
+
 android.allow_backup = True
 
-[buildozer]
-# ... existing config ...
 
-# Ensure compatible Python version
-python_version = 3.11
+# ============================================================
+# ANDROID PRIVATE STORAGE
+# ============================================================
+
+android.private_storage = True
+
+
+# ============================================================
+# LOGCAT
+# ============================================================
 
 log_level = 2
+
+
+# ============================================================
+# KIVY
+# ============================================================
+
+# Uncomment jika menggunakan file .kv
+# source.include_exts = py,kv,png,jpg,jpeg,atlas,json,txt
+
+
+# ============================================================
+# BUILD OPTIONS
+# ============================================================
+
+warn_on_root = 1
+
+# Jangan menggunakan SDK internal Buildozer secara paksa.
+# SDK akan disiapkan oleh GitHub Actions.
+
+
+# ============================================================
+# BLACKLIST
+# ============================================================
+
+# Jangan memasukkan file development yang tidak diperlukan.
+source.exclude_dirs = \
+    .git, \
+    .github, \
+    .buildozer, \
+    bin, \
+    __pycache__, \
+    tests
+
+
+# ============================================================
+# DEPENDENCIES
+# ============================================================
+
+# Jangan masukkan Pillow dulu.
+# Pillow dapat ditambahkan setelah APK dasar berhasil dibuat.
+
+
+[buildozer]
+
+# ============================================================
+# BUILDOZER GLOBAL
+# ============================================================
+
+log_level = 2
+
 warn_on_root = 1
