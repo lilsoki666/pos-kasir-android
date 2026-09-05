@@ -20,7 +20,7 @@ version = 1.0.0
 # REQUIREMENTS
 # ============================================================
 
-requirements = python3.11,kivy,pyjnius
+requirements = kivy,pyjnius
 
 
 # ============================================================
