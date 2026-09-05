@@ -488,7 +488,7 @@ class POSScreen(Screen):
             else:
                 b.add_widget(Label(text="📦", font_size="28sp", size_hint_y=.58, color=(.2,.2,.22,1)))
             name=Label(text=f'{p["name"]}\n{money(p["price"])} | stok {p["stock"]:g}',
-                       color=.08,.09,.11,1, halign="center")
+                       color=(.08,.09,.11,1), halign="center")
             name.bind(size=lambda inst,val: setattr(inst,"text_size",val))
             b.add_widget(name)
             b.bind(on_touch_down=lambda inst,touch,p=p: self.add_product(p) if inst.collide_point(*touch.pos) and touch.is_double_tap else None)
