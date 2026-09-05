@@ -486,7 +486,7 @@ class POSScreen(Screen):
                 img=Image(source=p["image"], size_hint_y=.58)
                 b.add_widget(img)
             else:
-                b.add_widget(Label(text="📦", font_size="28sp", size_hint_y=.58, color=.2,.2,.22,1))
+                b.add_widget(Label(text="📦", font_size="28sp", size_hint_y=.58, color=(.2,.2,.22,1)))
             name=Label(text=f'{p["name"]}\n{money(p["price"])} | stok {p["stock"]:g}',
                        color=.08,.09,.11,1, halign="center")
             name.bind(size=lambda inst,val: setattr(inst,"text_size",val))
