@@ -617,7 +617,7 @@ class ProductScreen(Screen):
             if p["image"] and os.path.exists(p["image"]):
                 row.add_widget(Image(source=p["image"],size_hint_x=.16))
             info=Label(text=f'{p["name"]}  •  {p["sku"] or "-"}\n{money(p["price"])}  • stok {p["stock"]:g}\n{p["category"] or "Tanpa kategori"}',
-                       color=.08,.09,.11, halign="left")
+                       color=(.08,.09,.11), halign="left")
             info.bind(size=lambda inst,val:setattr(inst,"text_size",val))
             row.add_widget(info)
             box.add_widget(row)
