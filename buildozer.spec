@@ -16,11 +16,6 @@ source.include_exts = py,png,jpg,jpeg,kv,json,txt,db,atlas
 
 version = 1.0.0
 
-version.regex = __version__ = ['"]([^'"]*)['"]
-
-version.filename = %(source.dir)s/main.py
-
-
 # ============================================================
 # REQUIREMENTS
 # ============================================================
