@@ -673,7 +673,7 @@ class TransactionScreen(Screen):
         box=self.ids.list; box.clear_widgets()
         for s in self.app.db.sales():
             box.add_widget(Label(text=f'{s["invoice"]}  •  {s["created_at"]}\n{money(s["total"])}  •  {s["payment_method"]}',
-                                 color=.08,.09,.11,halign="left",size_hint_y=None,height=dp(58)))
+                                 color=(.08,.09,.11),halign="left",size_hint_y=None,height=dp(58)))
 
 class ReportScreen(Screen):
     def on_enter(self):
