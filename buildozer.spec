@@ -21,7 +21,7 @@ version = 1.0.0
 # ============================================================
 
 requirements = kivy,pyjnius
-
+requirements.txt = ./requirements.txt
 
 # ============================================================
 # ORIENTASI
