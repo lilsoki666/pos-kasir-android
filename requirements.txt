@@ -1,3 +1,5 @@
-kivy==2.2.1
-pyjnius==1.5.2
-charset_normalizer==3.3.2
+kivy
+pyjnius
+# Use source builds for packages with wheel issues
+--no-binary charset-normalizer
+charset-normalizer
